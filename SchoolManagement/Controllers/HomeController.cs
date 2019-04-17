@@ -26,5 +26,10 @@ namespace SchoolManagement.Controllers
 
             return View();
         }
+
+        public ActionResult TestView()
+        {
+            return View();
+        }
     }
 }

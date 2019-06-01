@@ -11,17 +11,20 @@ using SchoolManagement.Models;
 
 namespace SchoolManagement.Controllers
 {
+    [Authorize(Roles ="Teacher")]
     public class StudentsController : Controller
     {
         private SchoolManagement_DBEntities db = new SchoolManagement_DBEntities();
 
         // GET: Students
+        [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
             return View(await db.Students.ToListAsync());
         }
 
         // GET: Students/Details/5
+
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)

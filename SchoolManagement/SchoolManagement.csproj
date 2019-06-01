@@ -199,6 +199,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904092248030_InitialCreate.cs" />
+    <Compile Include="Migrations\201904092248030_InitialCreate.Designer.cs">
+      <DependentUpon>201904092248030_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904172309036_Added BirthDate.cs" />
+    <Compile Include="Migrations\201904172309036_Added BirthDate.Designer.cs">
+      <DependentUpon>201904172309036_Added BirthDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Course.cs">
       <DependentUpon>SchoolManagementDBModel.tt</DependentUpon>
@@ -338,6 +347,14 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201904092248030_InitialCreate.resx">
+      <DependentUpon>201904092248030_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904172309036_Added BirthDate.resx">
+      <DependentUpon>201904172309036_Added BirthDate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,51 @@
+﻿@model SchoolManagement.Models.Enrollment
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Enrollment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Grade)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Grade)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Course.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Course.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lecturer.First_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lecturer.First_Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.EnrollmentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

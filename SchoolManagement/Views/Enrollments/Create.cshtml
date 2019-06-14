@@ -6,7 +6,34 @@
 }
 
 <script>
-    $( function() {
+
+    $(function () {
+
+        function LoadEnrollments(cid) {
+            $.ajax({
+                url: '@Url.Action("_enrollmentPartial", "Enrollments")',
+                dataType: 'html',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                data: {
+                    courseid: cid
+                },
+                success: function (data) {
+                    $('#data').fadeOut().html(data).fadeIn();
+                }
+            });
+        }
+
+        var cid = $('#CourseID').val();
+        LoadEnrollments(cid);
+
+        $('#CourseID').change(function () {
+            var cid = $('#CourseID').val();
+            LoadEnrollments(cid);
+            $("#failed").fadeOut('fast');
+            $("#success").fadeOut('fast');
+        });
+   
         $("#Student_FirstName" ).autocomplete({
           source: function( request, response ) {
             $.ajax( {
@@ -18,6 +45,7 @@
                 },
                 success: function (data) {
                     console.log(data);
+                    $("#Student_FirstName").val("");
                     response($.map(data, function (item) {
                         return { label: item.Name, value: item.Name, id: item.Id };
                     }))
@@ -30,48 +58,105 @@
                 $("#StudentID").val(query.item.id);
           }
         } );
-  } );
+    });
+
+    function Added(res) {
+        if (res.IsSuccess) {
+            $(function () {
+                $("#failed").fadeOut('fast');
+                $("#success").fadeIn('fast');
+                //$('#success').append(res.Message);
+                var cid = $('#CourseID').val();
+                $.ajax({
+                    url: '@Url.Action("_enrollmentPartial", "Enrollments")',
+                    dataType: 'html',
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    data: {
+                        courseid: cid
+                    },
+                    success: function (data) {
+                        $('#data').fadeOut().html(data).fadeIn();
+                    }
+                });
+            })
+        }
+        else {
+            Failed(res);
+        }
+    }
+
+    function Failed(res) {
+        $(function () {
+            $("#failed").fadeIn('fast');
+            $("#success").fadeOut('fast');
+            //$('#failed').append(res.Message);
+        })
+    }
+
+    function Failure() {
+        $(function () {
+            $("#failed").fadeIn('fast');
+            //$('#failed').append(res.Message);
+        })
+    }
 </script>
 
 <h2>Create</h2>
 
-@using (Html.BeginForm()) 
+@using (Ajax.BeginForm("AddStudent", "Enrollments", new AjaxOptions {
+    HttpMethod = "POST",
+    OnSuccess = "Added",
+    OnFailure = "Failure"
+}))
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>Enrollment</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        
+<div class="form-horizontal">
+    <h4>Enrollment</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CourseID, "CourseID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("CourseID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CourseID, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    <div id="failed" class="alert alert-danger" style="display: none;">
+        There was an error adding the Student to this course. 
+    </div>
+    <div id="success" class="alert alert-success" style="display: none;">
+        Student Added Successfully
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.StudentID, "StudentID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @*<input type="text" id="StudentName" />*@
-                @Html.EditorFor(model => model.Student.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.HiddenFor(model => model.StudentID)
-                @Html.ValidationMessageFor(model => model.StudentID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        <label for="CourseID" class = "control-label col-md-2">Course</label>
+        <div class="col-md-10">
+            @Html.DropDownList("CourseID", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CourseID, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        <label for="Student_FirstName" class="control-label col-md-2">Student Name</label>
+        <div class="col-md-10">
+            @*<input type="text" id="StudentName" />*@
+            @Html.EditorFor(model => model.Student.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.HiddenFor(model => model.StudentID)
+            @Html.ValidationMessageFor(model => model.StudentID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Enroll Student" class="btn btn-success btn-block" />
+        </div>
+    </div>
+</div>
 }
+
+<hr/>
+
+<div id="data">
+    @*@Html.Action("_enrollmentPartial", "Enrollments")*@
+</div>
 
 <div>
     @Html.ActionLink("Back to List", "Index")
